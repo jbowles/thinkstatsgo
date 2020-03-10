@@ -103,3 +103,23 @@ func (in Interpolator) bisect(term float64) float64 {
 	frac := 1.0 * (term - in.xs[idx-1]) / (in.xs[idx] - in.xs[idx-1])
 	return in.ys[idx-1] + frac*1.0*(in.ys[idx]-in.ys[idx-1])
 }
+
+// PercentileRank takes a value and computes its percentile rank in a set of values.
+func PercentileRank(scores []float64, scr float64) int {
+	count := 0
+	for _, score := range scores {
+		if score <= scr {
+			count++
+		}
+	}
+	return (100 * count) / len(scores)
+}
+
+// Percentile takes a percentile rank and computes the corresponding value.
+func Percentile(scores []float64, rank int) float64 {
+	//don't want to mutate the incoming slice
+	scores_cpy := make([]float64, len(scores))
+	copy(scores_cpy, scores)
+	sort.Float64s(scores_cpy)
+	return scores[(rank * (len(scores_cpy) - 1) / 100)]
+}
